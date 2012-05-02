@@ -1,0 +1,25 @@
+
+gameplay:
+
+while gamestate = "play"
+    
+    
+    gosub user_input
+    if turn = 1 then gosub player1_turn
+      if my_stop(0).occupied = 1 and my_stop(1).occupied = 1 then player1_connect_max = 0 
+      if my_go(0).occupied = 1 and my_go(1).occupied = 1 then player2_connect_max = 0 : direction2 = ""
+
+    
+    if turn = 2 then gosub player2_turn
+      if my_stop(0).occupied = 1 and my_stop(1).occupied = 1 then player1_connect_max = 0 
+      if my_go(0).occupied = 1 and my_go(1).occupied = 1 then player2_connect_max = 0 : direction2 = ""
+
+
+    gosub display_hud
+    gosub win
+    
+    sync   
+    
+endwhile
+
+return

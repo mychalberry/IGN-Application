@@ -1,0 +1,158 @@
+
+
+player2_build_row:
+    
+
+     arrow = -1
+     decision = ""
+     
+     
+      if arrow = -1 and player1_disk > 20
+       
+       
+           if stop_type = "connect_3"
+             if my_stop(1).y < 7 
+               if my_grid(my_stop(1).y+1,my_stop(1).x) <> 0 and my_grid(my_stop(1).y,my_stop(1).x) = 0 then arrow = my_stop(1).x+3
+             endif
+             if my_stop(0).y < 7
+               if my_grid(my_stop(0).y+1,my_stop(0).x) <> 0 and my_grid(my_stop(0).y,my_stop(0).x) = 0 then arrow = my_stop(0).x+3
+             endif
+           endif 
+       
+            
+            if stop_type = "two_trap_left_stop"
+               if my_stop(1).occupied = 0 and my_grid(my_stop(1).y+1,my_stop(1).x) <> 0
+                 arrow = my_stop(1).x+3
+               endif 
+            
+               if my_stop(0).occupied = 0 and my_grid(my_stop(0).y+1,my_stop(0).x) <> 0
+                 arrow = my_stop(0).x+3
+               endif 
+               
+           endif
+     
+           if stop_type = "two_trap_right_stop"
+              if my_stop(0).occupied = 0 and my_grid(my_stop(0).y+1,my_stop(0).x) <> 0 
+                 arrow = my_stop(0).x+3
+              endif 
+           
+              if my_stop(1).occupied = 0 and my_grid(my_stop(1).y+1,my_stop(1).x) <> 0 
+                 arrow = my_stop(1).x+3
+              endif 
+           endif
+     
+      endif        
+     
+
+     
+     
+     if player1_connect_max > player2_connect_max then decision = "stop"
+     if player2_connect_max > player1_connect_max then decision = "build"
+     if player2_connect_max = player1_connect_max then decision = "build"
+     if player1_connect_max <= 1 then decision = "build"
+     
+     
+     rem these are ones that are always selected if you can win
+     if go_type = "two_trap_left"
+        if my_go(0).occupied = 0 and my_grid(my_go(0).y+1,my_go(0).x) <> 0
+           arrow = my_go(0).x+3
+        endif 
+     endif
+     
+     if go_type = "two_trap_right"
+        if my_go(1).occupied = 0 and my_grid(my_go(1).y+1,my_go(1).x) <> 0 
+           arrow = my_go(1).x+3
+        endif 
+     endif
+     
+     if go_type = "vertical"
+       if my_grid(my_go(0).y,my_go(0).x) = 0 then arrow = my_go(0).x+3  
+     endif
+     
+     if player2_connect_max = 3
+        if my_go(1).occupied = 0 and my_grid(my_go(1).y+1,my_go(1).x) <> 0 then arrow = my_go(1).x+3 
+        if my_go(0).occupied = 0 and my_grid(my_go(0).y+1,my_go(0).x) <> 0 then arrow = my_go(0).x+3 
+     endif
+     
+     
+     if decision = "build"  and arrow = -1
+         
+       
+       if direction2 = "horizontal"
+      
+             rem setup cant beat 3 trap
+             if player2_connect_max >= 2 and arrow = -1
+                
+               outcome = rnd(4)
+               if outcome <= 3 
+                  if my_go(1).occupied = 0
+                    if my_go(0).occupied = 0
+                        chance = 0
+                         if my_grid(my_go(0).y,my_go(0).x-1) = 0 or my_grid(my_go(0).y,my_go(0).x-1) = 2 
+                           inc chance
+                           arrow = my_go(0).x+3 
+                        endif
+                        if my_grid(my_go(1).y,my_go(1).x+1) = 0 or my_grid(my_go(1).y,my_go(1).x+1) = 2 
+                           inc chance
+                           arrow = my_go(1).x+3 
+                        endif
+                    endif
+                  endif
+               endif
+               
+               if arrow = -1 then outcome = rnd(2) 
+                 if outcome <= 1
+                  rem setup 2 to 4 trap
+                  if my_go(0).occupied = 0 and my_go(0).x <= 6
+                      if my_grid(my_go(0).y,my_go(0).x-1) = 0 then arrow = my_go(0).x+2
+                  endif
+              
+                  if my_go(1).occupied = 0 and my_go(1).x >= 4
+                      if my_grid(my_go(1).y,my_go(1).x+1) = 0 then arrow = my_go(1).x+4 
+                  endif
+ 
+                  if player2_connect_max = 3
+                      if my_go(0).occupied = 0 and my_grid(my_go(0).y+1,my_go(0).x) <> 0 then arrow = my_go(0).x+3 
+                      if my_go(1).occupied = 0 and my_grid(my_go(1).y+1,my_go(1).x) <> 0 then arrow = my_go(1).x+3 
+                  endif
+                endif
+                
+               endif
+       
+          rem straight across setup
+        
+          if player2_connect_max >= 1 and arrow = -1
+             if my_go(0).occupied = 0 and my_grid(my_go(0).y+1,my_go(0).x) <> 0 then arrow = my_go(0).x+3 
+             if my_go(1).occupied = 0 and my_grid(my_go(1).y+1,my_go(1).x) <> 0 then arrow = my_go(1).x+3 
+          endif
+        
+       endif
+     endif
+ 
+    
+    
+    
+     if decision = "stop" and arrow = -1
+         
+         if my_stop(0).occupied = 0 and my_grid(my_stop(0).y+1,my_stop(0).x) <> 0 then arrow = my_stop(0).x+3 
+         if my_stop(1).y > 6 
+            if my_stop(1).occupied = 0 and my_grid(my_stop(1).y+1,my_stop(1).x) <> 0 then arrow = my_stop(1).x+3 
+         endif
+     endif
+     
+      
+      if arrow = -1 then arrow = rnd(7)+3
+            
+      
+      rem if the top row is already selected find a new row
+      if my_grid(1,arrow-3) <> 0
+         mycontinue = 1 
+         while mycontinue = 1
+            arrow = rnd(7)+3
+            decision = "random"
+            if my_grid(1,arrow-3) = 0 then mycontinue = 0
+        endwhile       
+      endif      
+
+
+return

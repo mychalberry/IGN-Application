@@ -1,0 +1,36 @@
+
+
+user_input:
+
+if gamestate = "mainmenu"
+   
+    if mouseclick() = 1
+    
+       if mousex() <= 190 
+          if mousey() > 287 and mousey() < 380
+            gamestate = "play"
+          endif
+       endif
+
+        if mousex() <= 190 
+          if mousey() > 415 and mousey() < 500
+            gamestate = "quit"
+          endif
+       endif
+            
+    endif
+    
+    
+endif
+
+if gamestate = "play"
+    
+    if keystate(14) = 1 then gamestate = "initialize"
+    
+    if mouseclick() = 1 
+         arrow =  pick object(mousex(),mousey(),4,10)
+    endif
+    
+endif
+
+return

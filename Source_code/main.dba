@@ -1,0 +1,42 @@
+gamestate as string
+go_type as string
+stop_type as string
+decision as string
+direction as string
+direction2 as string
+
+
+
+gosub load_mainmenu
+gosub initialize_mainmenu
+sync on
+sync rate 60
+do
+    
+
+  gosub user_input
+  
+  if gamestate = "initialize"
+    gosub delete_game
+    gosub load_mainmenu
+    gosub initialize_mainmenu
+    gosub show_menu
+  endif  
+  
+  if gamestate  = "play"
+      
+      gosub hide_menu
+      gosub initialize_game
+      gosub load_game
+      gosub start_script
+      gosub gameplay
+      
+  endif
+  
+  if gamestate = "quit"
+      end
+  endif
+  
+  sync
+  
+loop

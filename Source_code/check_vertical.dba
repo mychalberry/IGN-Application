@@ -1,0 +1,298 @@
+
+
+check_vertical:
+
+value_1 = 1
+value_2 = 1
+save_1 = 0
+save_2 = 0
+done = 0
+player1_connect = 0
+
+while done = 0
+    
+    gosub check_vert_down
+    gosub set_vert_back
+    gosub vert_move_top
+
+endwhile
+
+
+return
+
+
+
+check_vert_down:
+
+    if my_grid(value_1,value_2) = 1
+        
+          inc value_1
+          inc player1_connect
+        
+    endif
+
+return
+
+
+
+
+set_vert_back:
+
+    if my_grid(value_1,value_2) = 0 or my_grid(value_1,value_2) = 2
+     
+       if player1_connect >= 4 then gosub win
+       if player1_connect >= player1_connect_max
+         gosub check_vert_allow_4 
+         if counter >= 4 
+           best_stop = 1
+           player1_connect_max = player1_connect
+           if player1_connect_max = 3 then stop_type = "connect_3"
+           direction = "vertical"
+         endif 
+       endif
+       
+       player1_connect = 0
+       inc value_1
+    endif
+
+return
+
+
+
+
+
+vert_move_top:
+
+    if my_grid(value_1,value_2) = -1
+       
+       if player1_connect >= 4 then gosub win
+       if player1_connect >= player1_connect_max
+         gosub check_vert_allow_4 
+         if counter >= 4
+             best_stop = 1
+             player1_connect_max = player1_connect
+             if player1_connect_max = 3 then stop_type = "connect_3"
+             direction = "vertical"
+         endif
+       endif
+     
+       player1_connect = 0  
+       inc value_2
+       value_1 = 1
+       if value_2 = 8
+          done = 1
+       endif 
+    endif
+ 
+
+return
+
+
+
+
+
+check_vertical_max:
+
+if direction = "vertical"
+
+       counter = 0
+   
+       do 
+         if value_1 < 3 then exit
+         if my_grid(value_1-1,value_2) = 2 or my_grid(value_1-1,value_2) = -1 then exit
+         inc counter
+         if my_grid(value_1-2,value_2) = 2 or my_grid(value_1-2,value_2) = -1 then exit
+         inc counter
+         if my_grid(value_1-3,value_2) = 2 or my_grid(value_1-3,value_2) = -1 then exit
+         inc counter
+         if my_grid(value_1-4,value_2) = 2 or my_grid(value_1-4,value_2) = -1 then exit
+         inc counter
+         exit
+       loop
+       
+       if counter < 4 
+          player1_connect_max = 0 
+          my_stop(0).occupied = 0
+          my_stop(1).occupied = 0
+          best_stop = 0
+       endif   
+      
+endif
+
+return
+
+
+check_vert_allow_4:
+
+   counter = 0
+   
+       do 
+         if value_1 < 3 then exit
+         if my_grid(value_1-1,value_2) = 2 or my_grid(value_1-1,value_2) = -1 then exit
+         inc counter
+         if my_grid(value_1-2,value_2) = 2 or my_grid(value_1-2,value_2) = -1 then exit
+         inc counter
+         if my_grid(value_1-3,value_2) = 2 or my_grid(value_1-3,value_2) = -1 then exit
+         inc counter
+         if my_grid(value_1-4,value_2) = 2 or my_grid(value_1-4,value_2) = -1 then exit
+         inc counter
+         exit
+       loop 
+       
+       if player1_connect = 3 and counter >= 4 
+          stop_type = "vertical"
+          if player1_connect_max = 3 then stop_type = "connect_3"
+          direction = "vertical"
+          my_stop(0).x = value_2
+          my_stop(0).y = value_1-4
+          my_stop(0).occupied = 0
+       endif
+       
+return
+
+
+
+
+
+
+
+
+
+
+
+
+
+check_vertical_2:
+
+value_1 = 1
+value_2 = 1
+done = 0
+player2_connect = 0
+
+while done = 0
+    
+    gosub check_vert_down_2
+    gosub set_vert_back_2
+    gosub vert_move_top_2
+
+endwhile
+
+
+return
+
+
+
+check_vert_down_2:
+
+    if my_grid(value_1,value_2) = 2
+       
+          inc value_1
+          inc player2_connect
+        
+    endif
+
+return
+
+
+set_vert_back_2:
+
+    if my_grid(value_1,value_2) = 0 or my_grid(value_1,value_2) = 1
+       
+       if player2_connect >= 4 then gosub win
+       if player2_connect > player2_connect_max
+       
+           gosub check_player2_vert_allow_4
+           if counter >= 4 
+              player2_connect_max = player2_connect
+              direction2 = "vertical"
+           endif
+       endif
+       
+       inc value_1
+       player2_connect = 0
+    endif
+    
+    
+
+
+return
+
+
+
+vert_move_top_2:
+
+    if my_grid(value_1,value_2) = -1
+       if player2_connect >= 4 then gosub win
+       if player2_connect > player2_connect_max
+          gosub check_player2_vert_allow_4
+          if counter >= 4 
+             player2_connect_max = player2_connect
+             direction2 = "vertical"
+          endif
+       endif
+     
+       player2_connect = 0  
+       inc value_2
+       value_1 = 1
+       if value_2 = 8
+          done = 1
+       endif 
+    endif
+ 
+
+return
+
+
+
+check_player2_vertical_max:
+
+if direction2 = "vertical"
+
+       counter = 0
+   
+       do 
+         if value_1 < 3 then exit
+         if my_grid(value_1-1,value_2) = 1 or my_grid(value_1-1,value_2) = -1 then exit
+         inc counter
+         if my_grid(value_1-2,value_2) = 1 or my_grid(value_1-2,value_2) = -1 then exit
+         inc counter
+         if my_grid(value_1-3,value_2) = 1 or my_grid(value_1-3,value_2) = -1 then exit
+         inc counter
+         if my_grid(value_1-4,value_2) = 1 or my_grid(value_1-4,value_2) = -1 then exit
+         inc counter
+         exit
+       loop
+       
+       if counter < 4 then player2_connect_max = 0 
+      
+endif
+
+return
+
+
+check_player2_vert_allow_4:
+
+   counter = 0
+   
+       do 
+         if value_1 < 3 then exit
+         if my_grid(value_1-1,value_2) = 1 or my_grid(value_1-1,value_2) = -1 then exit
+         inc counter
+         if my_grid(value_1-2,value_2) = 1 or my_grid(value_1-2,value_2) = -1 then exit
+         inc counter
+         if my_grid(value_1-3,value_2) = 1 or my_grid(value_1-3,value_2) = -1 then exit
+         inc counter
+         if my_grid(value_1-4,value_2) = 1 or my_grid(value_1-4,value_2) = -1 then exit
+         inc counter
+         exit
+       loop 
+       
+       if player2_connect = 3 and counter >= 4 
+          go_type = "vertical"
+          decision = "vertical"
+          my_go(0).x = value_2
+          my_go(0).y = value_1-4
+          my_go(0).occupied = 0
+       endif
+       
+return

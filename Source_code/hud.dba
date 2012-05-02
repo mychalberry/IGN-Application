@@ -1,0 +1,30 @@
+display_hud:
+
+remstart
+set cursor 5,5
+print "1: " + str$(player1_connect_max)
+print "2: " + str$(player2_connect_max)
+print "Go_type " + go_type
+print "Stop_type " + stop_type
+print "best_stop " + str$(best_stop)
+print "go 0: X " + str$(my_go(0).x) + " Y " + str$(my_go(0).y)
+print "go 1: X " + str$(my_go(1).x) + " Y " + str$(my_go(1).y)
+print "stop 0: X " + str$(my_stop(0).x) + " Y " + str$(my_stop(0).y)
+print "stop 1: X " + str$(my_stop(1).x) + " Y " + str$(my_stop(1).y)
+print "connected 1: " + str$(player1_connect_max)
+print "connected 2: " + str$(player2_connect_max)
+print "go 0: X " + str$(my_go(0).x) + " Y " + str$(my_go(0).y)
+print "go 1: X " + str$(my_go(1).x) + " Y " + str$(my_go(1).y)
+print "stop 0: X " + str$(my_stop(0).x) + " Y " + str$(my_stop(0).y)
+print "stop 1: X " + str$(my_stop(1).x) + " Y " + str$(my_stop(1).y)
+print "my_go: " + str$(my_go(0).occupied) 
+print "my_go: " + str$(my_go(1).occupied)
+print "my_stop: " + str$(my_stop(0).occupied) 
+print "my_stop: " + str$(my_stop(1).occupied)
+print best_stop
+remend
+
+
+
+return
+

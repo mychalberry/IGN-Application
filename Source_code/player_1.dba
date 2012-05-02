@@ -1,0 +1,14 @@
+
+
+
+player1_turn:
+
+  if arrow > 0 then gosub move_disk
+  
+return
+
+
+
+
+
+

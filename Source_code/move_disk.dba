@@ -1,0 +1,91 @@
+move_disk:
+
+if gamestate = "play" 
+    
+    
+
+ if arrow = 4 then value_2 = 1
+ if arrow = 5 then value_2 = 2
+ if arrow = 6 then value_2 = 3
+ if arrow = 7 then value_2 = 4
+ if arrow = 8 then value_2 = 5
+ if arrow = 9 then value_2 = 6
+ if arrow = 10 then value_2 = 7
+  
+   if my_grid(1,value_2) = 0
+      
+     play sound 1  
+     gosub check_valid_disk_down  
+     arrow = 0
+     if turn = 1 then inc player1_disk : currentdisk = player1_disk
+     if turn = 2 then inc player2_disk : currentdisk = player2_disk
+     
+     position object currentdisk,my_coor(value_1,value_2).x,450,object position z(currentdisk)
+     
+     rem this loop makes it so nothing can happen until disk fully drops
+     continue = 1
+     while continue = 1 
+     if object position y(currentdisk) <> my_coor(2,1).y
+        position object currentdisk,object position x(currentdisk),object position y(currentdisk) - 25,object position z(currentdisk)
+        if object position y(currentdisk) < my_coor(drop_1,drop_2).y then position object currentdisk,object position x(currentdisk),my_coor(drop_1,drop_2).y,object position z(currentdisk)
+        rem check if disk has fully dropped
+        if object position y(currentdisk) = my_coor(drop_1,drop_2).y 
+           continue = 0 
+           if currentdisk <= 41 then turn = 2
+           if currentdisk >= 42 then turn = 1 
+        endif
+     endif
+     sync
+     endwhile
+   endif   
+   
+if sound playing(1) = 1 then stop sound 1   
+endif
+return
+
+
+
+
+check_valid_disk_down:
+
+ done = 0
+ value_1 = 1
+ rem check top hole
+ if my_grid(1,value_2) = 0
+  if my_grid(2,value_2) <> 0
+     drop_1 = 1
+     drop_2 = 1
+     if turn = 1 then my_grid(1,value_2) = 1
+     if turn = 2 then my_grid(1,value_2) = 2
+     done = 1
+  endif
+ endif
+ 
+while done = 0
+    
+ if my_grid(value_1,value_2) = 0
+    inc value_1    
+ endif
+ 
+ if my_grid(value_1,value_2) <> 0
+     dec value_1
+     drop_1 = value_1
+     drop_2 = value_2
+     if turn = 1 
+         my_grid(drop_1,drop_2) = 1
+     endif
+     if turn = 2
+        my_grid(drop_1,drop_2) = 2
+     endif
+     
+     if drop_1 = my_stop(0).y and drop_2 = my_stop(0).x then my_stop(0).occupied = 1
+     if drop_1 = my_stop(1).y and drop_2 = my_stop(1).x then my_stop(1).occupied = 1
+     if drop_1 = my_go(0).y and drop_2 = my_go(0).x then my_go(0).occupied = 1
+     if drop_1 = my_go(1).y and drop_2 = my_go(1).x then my_go(1).occupied = 1
+
+     done = 1 
+ endif
+ 
+endwhile
+
+return

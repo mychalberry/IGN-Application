@@ -1,0 +1,28 @@
+
+win:
+
+if player1_connect >= 4 
+
+   gamestate = "initialize" 
+   done = 1
+   center text  screen width()/2,screen height()/8,"Player 1 wins!"
+   center text  screen width()/2,screen height()/6,"Press space to continue!"
+   sync
+   do 
+   if keystate(57) = 1 then exit
+   loop
+endif
+
+if player2_connect >= 4 
+
+   gamestate = "initialize" 
+   done = 1
+   center text  screen width()/2,screen height()/8,"Player 2 wins!"
+   center text  screen width()/2,screen height()/6,"Press space to continue!"
+   sync
+   do 
+   if keystate(57) = 1 then exit
+   loop
+endif
+
+return

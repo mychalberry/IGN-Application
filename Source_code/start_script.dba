@@ -1,0 +1,54 @@
+
+
+start_script:
+
+for i = 4 to 10
+    
+    hide object i
+    
+next i
+
+
+stop = 0
+done = 0
+while done = 0
+    
+  if keystate(57) = 1 then done = 1  
+  
+  
+  
+  yrotate object 1,stop 
+  inc stop,2 
+  
+  if stop >= 720 
+     rotate object 1,object angle x(1),0,object angle z(1)    
+     done = 1  
+  endif
+  
+  sync 
+    
+    
+endwhile
+
+for i = 4 to 10
+    
+    show object i
+    
+next i
+
+stop = 1300
+
+done = 0
+
+while done = 0
+ for i = 4 to 10
+     position object i,object position x(i),stop,object position z(i)   
+ next i
+ 
+ dec stop
+ if stop = 1192 then done = 1   
+    
+ sync
+endwhile
+
+return

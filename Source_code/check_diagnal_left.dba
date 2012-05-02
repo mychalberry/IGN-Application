@@ -1,0 +1,646 @@
+do_diag_left:
+
+value_1 = 1
+value_2 = 1
+done = 0
+player1_connect = 0
+
+while done = 0
+    
+    gosub check_diag_left
+    gosub set_diag_left_back
+    gosub diag_left_reset
+    
+endwhile
+
+return
+
+
+
+
+check_diag_left:
+
+done2 = 0
+while done2 = 0 
+    
+    if my_grid(value_1,value_2) = 1
+        
+        
+        dec value_1
+        dec value_2
+        inc player1_connect
+        
+    endif
+    
+    if my_grid(value_1,value_2) <> 1
+        
+           
+        if player1_connect >= 4 then gosub win
+        if player1_connect >= player1_connect_max
+        
+         if best_stop = 0 and player1_connect = player1_connect_max or player1_connect > player1_connect_max 
+           
+            gosub check_diag_left_allow_4
+            if counter >= 4
+                rem store variables to block max connect
+           
+                
+                
+                if my_grid(value_1,value_2) = 0
+                  my_stop(0).x = value_2
+                  my_stop(0).y = value_1
+                  my_stop(0).occupied = 0
+                  if my_grid(my_stop(0).y+1,my_stop(0).x) <> 0 then best_stop = 1
+                  player1_connect_max = player1_connect
+                  stop_type = "diagonal_left"
+                  if player1_connect_max = 3 then stop_type = "connect_3"
+                  direction = "diagonal_left"
+                  if  my_grid(value_1,value_2) <> 0
+                     my_stop(1).occupied = 1
+                  endif  
+            
+                endif
+
+                
+                if  my_grid(value_1+player1_connect+1,value_2+player1_connect+1) = 0
+                   my_stop(1).x = value_2+player1_connect+1
+                   my_stop(1).y = value_1+player1_connect+1
+                   my_stop(1).occupied = 0
+                   if my_grid(my_stop(1).y+1,my_stop(1).x) <> 0 then best_stop = 1
+                   player1_connect_max = player1_connect
+                   stop_type = "diagonal_left"
+                   if player1_connect_max = 3 then stop_type = "connect_3"
+                   direction = "diagonal_left"
+                   if value_1 > 2 and value_1 < 5
+                    if value_2 > 2 and value_2 < 6
+                       if my_grid(value_1-player1_connect,value_2-player1_connect) <> 0
+                          my_stop(0).occupied = 1
+                       endif
+                    endif
+                   endif
+                   
+                endif
+             endif
+           endif
+        endif
+        
+        
+        value_1 = value_1 + player1_connect+1
+        value_2 = value_2 + player1_connect
+        player1_connect = 0
+        done2 = 1    
+        
+    endif
+    
+    
+endwhile
+
+
+return
+
+
+set_diag_left_back:
+
+ rem if at bottom of board go to top and shift right to start on next row
+ if value_1 = 6 and value_2 <> 8
+     
+    gosub check_diag_left 
+    value_1 = 1
+    inc value_2
+     
+ endif 
+
+return
+
+
+
+diag_left_reset:
+
+   if value_1 = 0
+       
+       if player1_connect >= 4 then gosub win
+       if player1_connect > player1_connect_max
+          if best_stop = 0 and player1_connect = player1_connect_max or player1_connect > player1_connect_max 
+         
+              gosub check_diag_left_allow_4
+              if counter >= 4
+
+                  rem store variables to block max connect
+                 
+                  if my_grid(value_1,value_2) = 0
+                    my_stop(0).x = value_2
+                    my_stop(0).y = value_1 
+                    my_stop(0).occupied = 0
+                     if my_grid(my_stop(0).y+1,my_stop(0).x) <> 0 then best_stop = 1
+                    player1_connect_max = player1_connect
+                    stop_type = "diagonal_left"
+                    if player1_connect_max = 3 then stop_type = "connect_3"
+                    direction = "diagonal_left"
+                    if  my_grid(value_1,value_2) <> 0
+                        my_stop(1).occupied = 1
+                    endif  
+            
+                  endif
+
+                  if  my_grid(value_1-player1_connect,value_2-player1_connect) = 0                            
+                     my_stop(1).x = value_2-player1_connect
+                     my_stop(1).y = value_1-player1_connect
+                     my_stop(1).occupied = 0
+                     if my_grid(my_stop(1).y+1,my_stop(1).x) <> 0 then best_stop = 1
+                     player1_connect_max = player1_connect
+                     stop_type = "diagonal_left"
+                     if player1_connect_max = 3 then stop_type = "connect_3"
+                     direction = "diagonal_left"
+                     if value_1 > 2
+                        if my_grid(value_1-player1_connect,value_2-player1_connect) <> 0
+                          my_stop(0).occupied = 1
+                        endif
+                     endif
+                   endif
+               endif 
+           endif
+       endif
+       
+       value_2 = value_2 + player1_connect
+       value_1 = value_1 + player1_connect+1
+       player1_connect = 0
+       
+   endif
+   
+    if value_1 = 6 and value_2 = 8
+       done = 1
+       done2 = 1
+    endif
+
+return
+
+
+
+
+
+
+
+
+
+check_diag_left_allow_4:
+
+
+         counter = 0
+       do 
+         if my_grid(value_1,value_2) = 2 or my_grid(value_1,value_2) = -1 then exit
+         inc counter
+         if value_2 < 1 then exit
+         if my_grid(value_1-1,value_2-1) = 2 or my_grid(value_1-1,value_2-1) = -1 then exit
+         inc counter
+         if value_2 < 1 then exit
+         if my_grid(value_1-2,value_2-2) = 2 or my_grid(value_1-2,value_2-2) = -1 then exit
+         inc counter
+         if value_2 < 2  then exit
+         if my_grid(value_1-3,value_2-3) = 2 or my_grid(value_1-3,value_2-3) = -1 then exit
+         inc counter
+         exit
+       loop
+       do
+         if value_2 > 7 and value_1 < 7 then exit
+         if my_grid(value_1+1,value_2+1) = 2 or my_grid(value_1+1,value_2+1) = -1 then exit
+         inc counter
+         if value_2 > 6 and value_1 < 6 then exit
+         if my_grid(value_1+2,value_2+2) = 2 or my_grid(value_1+2,value_2+2) = -1 then exit
+         inc counter
+         if value_2 > 5 and value_1 < 5 then exit
+         if my_grid(value_1+3,value_2+3) = 2 or my_grid(value_1+3,value_2+3) = -1 then exit
+         inc counter
+         exit 
+       loop
+
+return
+
+
+
+
+check_diag_left_max:
+
+
+if direction = "diagonal_left"
+         counter = 0
+       do 
+         if my_grid(my_stop(0).y,my_stop(0).x) = 2 or my_grid(my_stop(0).y,my_stop(0).x) = -1 then exit
+         inc counter
+         if my_stop(0).x < 1 then exit
+         if my_grid(my_stop(0).y-1,my_stop(0).x-1) = 2 or my_grid(my_stop(0).y-1,my_stop(0).x-1) = -1 then exit
+         inc counter
+         if my_stop(0).x < 1 then exit
+         if my_grid(my_stop(0).y-2,my_stop(0).x-2) = 2 or my_grid(my_stop(0).y-2,my_stop(0).x-2) = -1 then exit
+         inc counter
+         if my_stop(0).x < 2 then exit
+         if my_grid(my_stop(0).y-3,my_stop(0).x-3) = 2 or my_grid(my_stop(0).y-3,my_stop(0).x-3) = -1 then exit
+         inc counter
+         exit
+       loop
+       do
+         if my_stop(0).x > 7 and my_stop(0).y < 7 then exit
+         if my_grid(my_stop(0).y+1,my_stop(0).x+1) = 2 or my_grid(my_stop(0).y+1,my_stop(0).x+1) = -1 then exit
+         inc counter
+         if my_stop(0).x > 6 and my_stop(0).y < 6 then exit
+         if my_grid(my_stop(0).y+2,my_stop(0).x+2) = 2 or my_grid(my_stop(0).y+2,my_stop(0).x+2) = -1 then exit
+         inc counter
+         if my_stop(0).x > 5 and my_stop(0).y < 5 then exit
+         if my_grid(my_stop(0).y+3,my_stop(0).x+3) = 2 or my_grid(my_stop(0).y+3,my_stop(0).x+3) = -1 then exit
+         inc counter
+         exit 
+       loop
+       
+       if counter < 4 
+          counter = 0
+          do 
+            if my_grid(my_stop(1).y,my_stop(1).x) = 2 or my_grid(my_stop(1).y,my_stop(1).x) = -1 then exit
+            inc counter
+            if my_stop(1).x < 1 then exit
+            if my_grid(my_stop(1).y-1,my_stop(1).x-1) = 2 or my_grid(my_stop(1).y-1,my_stop(1).x-1) = -1 then exit
+            inc counter
+            if my_stop(1).x < 1 then exit
+            if my_grid(my_stop(1).y-2,my_stop(1).x-2) = 2 or my_grid(my_stop(1).y-2,my_stop(1).x-2) = -1 then exit
+            inc counter
+            if my_stop(1).x < 2 then exit
+            if my_grid(my_stop(1).y-3,my_stop(1).x-3) = 2 or my_grid(my_stop(1).y-3,my_stop(1).x-3) = -1 then exit
+            inc counter
+            exit
+          loop
+          do
+            if my_stop(1).x > 7 and my_stop(1).y < 7 then exit
+            if my_grid(my_stop(1).y+1,my_stop(1).x+1) = 2 or my_grid(my_stop(1).y+1,my_stop(1).x+1) = -1 then exit
+            inc counter
+            if my_stop(1).x > 6 and my_stop(1).y < 6 then exit
+            if my_grid(my_stop(1).y+2,my_stop(1).x+2) = 2 or my_grid(my_stop(1).y+2,my_stop(1).x+2) = -1 then exit
+            inc counter
+            if my_stop(1).x > 5 and my_stop(1).y < 5 then exit
+            if my_grid(my_stop(1).y+3,my_stop(1).x+3) = 2 or my_grid(my_stop(1).y+3,my_stop(1).x+3) = -1 then exit
+            inc counter
+          exit 
+       loop
+       
+       
+       endif       
+       
+       
+       if counter < 4
+          player1_connect_max = 0 
+          best_stop = 0
+       endif
+
+endif
+
+
+return
+
+
+
+
+
+
+
+check_diag_left_2_trap:
+
+if player1_connect_max = 2 
+    
+   do 
+     if my_stop(1).y > 2 and my_stop(1).x < 5     
+       if my_grid(my_stop(1).y-3,my_stop(1).x > 3) = 0 
+           if my_grid(my_stop(1).y-4,my_stop(1).x+4) = 1 then stop_type = "two_trap_right_stop" : best_stop = 1
+       endif
+     endif
+   
+     if my_grid(my_stop(1).y,my_stop(1).x) = 0
+           if my_grid(my_stop(1).y-1,my_stop(1).x-1) = 1 then stop_type = "two_trap_left_stop" : best_stop = 1 
+     endif      
+       
+    if my_grid(my_stop(0).y,my_stop(0).x) = 0 
+       if my_grid(my_stop(0).y-1,my_stop(0).x-1) = 1 then stop_type = "two_trap_right_stop" : best_stop = 1 
+    endif
+   
+    if my_grid(my_stop(0).y,7) = 1
+       if my_grid(my_stop(0).y,5) = 0 
+         if my_grid(my_stop(0).y,4) = 1 then stop_type = "two_trap_left_stop" : best_stop = 1 
+       endif
+    endif
+  
+    if my_stop(0).x-3 < 3 then exit
+       if my_grid(my_stop(0).y,my_stop(0).x-3) = 0 
+         if my_grid(my_stop(0).y,my_stop(0).x-4) = 1 then stop_type = "two_trap_left_stop" : best_stop = 1 
+       endif
+  
+    exit
+    loop 
+
+endif
+
+return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+do_diag_left_2:
+
+value_1 = 1
+value_2 = 1
+done = 0
+player2_connect = 0
+
+while done = 0
+    
+    gosub check_diag_left_2
+    gosub set_diag_left_back_2
+    gosub diag_left_reset_2
+    
+endwhile
+
+return
+
+
+
+
+check_diag_left_2:
+
+done2 = 0
+while done2 = 0 
+    
+    if my_grid(value_1,value_2) = 2
+        
+        dec value_1
+        dec value_2
+        inc player2_connect
+        
+    endif
+    
+    if my_grid(value_1,value_2) <> 2
+  
+  
+        if player2_connect >= 4 then gosub win
+        if player2_connect > player2_connect_max
+            gosub check_diag_left_allow_4_2
+            if counter >= 4  
+               if my_grid(value_1,value_2) = 0
+
+                   my_go(0).x = value_2
+                   my_go(0).y = value_1
+                   my_go(0).occupied = 0
+                   if my_grid(my_stop(0).y+1,my_stop(0).x) <> 0 then best_stop = 1
+                   player2_connect_max = player2_connect
+                   if player2_connect = 3 then go_type = "connect_3" 
+                   go_type = "diagonal_left"
+                   direction2 = "diagonal_left"
+                   if  my_grid(value_1,value_2) <> 0
+                     my_go(1).occupied = 1
+                   endif  
+                 
+                endif
+  
+
+              if value_2 < 6
+                if  my_grid(value_1-player2_connect,value_2+player2_connect) = 0
+                    my_go(1).x = value_2-player2_connect
+                    my_go(1).y = value_1-player2_connect
+                    my_go(1).occupied = 0
+                    if my_grid(my_stop(1).y+1,my_stop(1).x) <> 0 then best_stop = 1
+                    player2_connect_max = player2_connect
+                    if player2_connect = 3 then go_type = "connect_3" 
+                    go_type = "diagonal_left"
+                    direction2 = "diagonal_left"
+                    if my_grid(value_1,value_2) <> 0
+                        my_go(0).occupied = 1
+                   endif
+                endif
+               endif
+                
+             endif
+          endif
+        
+        value_1 = value_1 + player2_connect+1
+        value_2 = value_2 + player2_connect
+        player2_connect = 0
+        done2 = 1    
+        
+    endif
+    
+    
+endwhile
+
+
+return
+
+
+set_diag_left_back_2:
+
+ rem if at bottom of board go to top and shift left to start on next row
+ if value_1 = 6 and value_2 <> 7
+     
+    gosub check_diag_left_2 
+    value_1 = 1
+    inc value_2
+     
+ endif 
+
+return
+
+
+
+diag_left_reset_2:
+
+   if value_1 = 0
+       
+       if player2_connect >= 4 then gosub win
+       if player2_connect > player2_connect_max
+           gosub check_diag_left_allow_4_2
+            if counter >= 4  
+               if my_grid(value_1,value_2) = 0
+
+                   my_go(0).x = value_2
+                   my_go(0).y = value_1
+                   my_go(0).occupied = 0
+                   player2_connect_max = player2_connect
+                   go_type = "diagonal_left"
+                   if player2_connect = 3 then go_type = "connect_3" 
+                   direction2 = "diagonal_left"
+                   if  my_grid(value_1,value_2) <> 0
+                     my_go(1).occupied = 1
+                   endif  
+                 
+                endif
+  
+
+
+                if  my_grid(value_1-player2_connect,value_2-player2_connect) = 0
+                    my_go(1).x = value_2-player2_connect
+                    my_go(1).y = value_1-player2_connect
+                    my_go(1).occupied = 0
+                    player2_connect_max = player2_connect
+                    go_type = "diagonal_left"
+                    if player2_connect = 3 then go_type = "connect_3" 
+                    direction2 = "diagonal_left"
+                    if my_grid(value_1,value_2) <> 0
+                        my_go(0).occupied = 1
+                   endif
+                endif
+             endif
+       endif
+       
+       value_2 = value_2 + player2_connect
+       value_1 = value_1 + player2_connect+1
+       player2_connect = 0
+       
+   endif
+   
+    if value_1 > 6 and value_2 = 7
+       done = 1
+       done2 = 1
+    endif
+
+return
+
+
+
+
+
+
+
+check_diag_left_allow_4_2:
+
+
+         counter = 0
+       do 
+         if my_grid(value_1,value_2) = 2 or my_grid(value_1,value_2) = -1 then exit
+         inc counter
+         if value_2 < 1 then exit
+         if my_grid(value_1+1,value_2+1) = 1 or my_grid(value_1+1,value_2+1) = -1 then exit
+         inc counter
+         if value_2 < 1 then exit
+         if my_grid(value_1+2,value_2+2) = 1 or my_grid(value_1+2,value_2+2) = -1 then exit
+         inc counter
+         if value_2 < 2  then exit
+         if my_grid(value_1+3,value_2+3) = 1 or my_grid(value_1+3,value_2+3) = -1 then exit
+         inc counter
+         exit
+       loop
+       do
+         if value_2 < 1 or value_1 < 1 then exit
+         if my_grid(value_1-1,value_2-1) = 1 or my_grid(value_1-1,value_2-1) = -1 then exit
+         inc counter
+         if value_2 < 2 or value_1 < 2 then exit
+         if my_grid(value_1-2,value_2-2) = 1 or my_grid(value_1-2,value_2-2) = -1 then exit
+         inc counter
+         if value_2 < 3 or value_1 < 3 then exit
+         if my_grid(value_1-3,value_2-3) = 1 or my_grid(value_1-3,value_2-3) = -1 then exit
+         inc counter
+         exit 
+       loop
+
+return
+
+
+
+
+
+
+
+
+
+check_diag_left_max_2:
+
+
+if direction2 = "diagonal_left"
+         counter = 0
+       do 
+         if my_grid(my_go(0).y,my_go(0).x) = 1 or my_grid(my_go(0).y,my_go(0).x) = -1 then exit
+         inc counter
+         if my_go(0).x < 1 then exit
+         if my_grid(my_go(0).y+1,my_go(0).x+1) = 2 or my_grid(my_go(0).y+1,my_go(0).x+1) = -1 then exit
+         inc counter
+         if my_go(0).x < 1 then exit
+         if my_grid(my_go(0).y+2,my_go(0).x+2) = 1 or my_grid(my_go(0).y+2,my_go(0).x+2) = -1 then exit
+         inc counter
+         if my_go(0).x < 2  then exit
+         if my_grid(my_go(0).y+3,my_go(0).x+3) = 1 or my_grid(my_go(0).y+3,my_go(0).x+3) = -1 then exit
+         inc counter
+         exit
+       loop
+       do
+         if my_go(0).x > 7 then exit
+         if my_grid(my_go(0).y-1,my_go(0).x-1) = 1 or my_grid(my_go(0).y-1,my_go(0).x+1) = -1 then exit
+         inc counter
+         if my_go(0).x > 6 then exit
+         if my_grid(my_go(0).y-2,my_go(0).x-2) = 1 or my_grid(my_go(0).y-2,my_go(0).x-2) = -1 then exit
+         inc counter
+         if my_go(0).x > 5 then exit
+         if my_grid(my_go(0).y-3,my_go(0).x-3) = 1 or my_grid(my_go(0).y-3,my_go(0).x-3) = -1 then exit
+         inc counter
+         exit 
+       loop
+       
+       if counter < 4 
+          counter = 0
+          do 
+            if my_grid(my_go(1).y,my_go(1).x) = 1 or my_grid(my_go(1).y,my_go(1).x) = -1 then exit
+            inc counter
+            if my_go(1).x < 1 then exit
+            if my_grid(my_go(1).y+1,my_go(1).x+1) = 1 or my_grid(my_go(1).y+1,my_go(1).x+1) = -1 then exit
+            inc counter
+            if my_go(1).x < 1 then exit
+            if my_grid(my_go(1).y+2,my_go(1).x+2) = 1 or my_grid(my_go(1).y+2,my_go(1).x+2) = -1 then exit
+            inc counter
+            if my_go(1).x < 2 then exit
+            if my_grid(my_go(1).y+3,my_go(1).x+3) = 1 or my_grid(my_go(1).y+3,my_go(1).x+3) = -1 then exit
+            inc counter
+            exit
+          loop
+          do
+            if my_go(1).x > 7 then exit
+            if my_grid(my_go(1).y-1,my_go(1).x-1) = 1 or my_grid(my_go(1).y-1,my_go(1).x-1) = -1 then exit
+            inc counter
+            if my_go(1).x > 6 then exit
+            if my_grid(my_go(1).y-2,my_go(1).x-2) = 1 or my_grid(my_go(1).y-2,my_go(1).x-2) = -1 then exit
+            inc counter
+            if my_go(1).x > 5 then exit
+            if my_grid(my_go(1).y-3,my_go(1).x-3) = 1 or my_grid(my_go(1).y-3,my_go(1).x-3) = -1 then exit
+            inc counter
+          exit 
+       loop
+       
+       
+       endif       
+       
+       
+       if counter < 4 then player2_connect_max = 0 : mycheck$ = "cancelled"
+       
+       if counter >= 4 then mycheck$ = ""
+ 
+endif
+
+
+return
+
+
+
+
+
+
+

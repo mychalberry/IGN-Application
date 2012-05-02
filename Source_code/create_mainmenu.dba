@@ -1,0 +1,52 @@
+load_mainmenu:
+
+load image "media/mainmenu/backer.png",100
+sprite 100,0,0,100
+stretch sprite 100,screen width()/6,screen height()/7
+
+
+load image "media/mainmenu/title.png",102
+sprite 102,screen width()/8,50,102
+stretch sprite 102,100,100
+
+load image "media/mainmenu/play.png",101
+sprite 101,40,280,101
+stretch sprite 101,60,60
+
+load image "media/mainmenu/quit.png",103
+sprite 103,-125,400,103
+stretch sprite 103,60,60
+
+
+return
+
+
+initialize_mainmenu:
+
+gamestate as string
+gamestate = "mainmenu"
+
+return
+
+hide_menu:
+
+hide sprite 100
+hide sprite 101
+hide sprite 102
+hide sprite 103
+
+cls
+color backdrop rgb(0,0,0)
+center text screen width()/2,screen height()/3*2,"Loading..."
+sync
+
+return
+
+show_menu:
+
+show sprite 100
+show sprite 101
+show sprite 102
+show sprite 103
+
+return

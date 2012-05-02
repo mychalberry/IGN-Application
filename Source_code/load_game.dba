@@ -1,0 +1,176 @@
+
+
+initialize_game:
+set camera range 1,25000
+type coordinates
+  x as integer
+  y as integer
+endtype
+
+dim my_grid(7,8)
+dim my_coor(7,8) as coordinates
+i = 0
+while i <= 7 
+ my_coor(1,i).y = 335
+ my_coor(2,i).y = 143 
+ my_coor(3,i).y = -50
+ my_coor(4,i).y = -245 
+ my_coor(5,i).y = -438 
+ my_coor(6,i).y = - 626  
+ inc i
+endwhile
+i = 0
+while i <= 6 
+ my_coor(i,1).x = -175
+ my_coor(i,2).x = 17
+ my_coor(i,3).x = 209
+ my_coor(i,4).x = 401
+ my_coor(i,5).x = 593
+ my_coor(i,6).x = 785
+ my_coor(i,7).x = 977
+ inc i
+endwhile
+
+
+
+i = 0
+while i <= 8
+ my_grid(0,i) = -1
+ my_grid(1,i) = 0 
+ my_grid(2,i) = 0 
+ my_grid(3,i) = 0 
+ my_grid(4,i) = 0   
+ my_grid(5,i) = 0
+ my_grid(6,i) = 0
+ my_grid(7,i) = -1
+ inc i
+endwhile   
+
+i = 0
+while i <= 7
+  my_grid(i,0) = -1
+  my_grid(i,8) = -1
+  inc i  
+endwhile
+
+turn = 1
+
+player1_disk = 19
+player1_connect = 0
+player1_connect_max = 0
+
+player2_disk = 41
+player2_connect = 0
+player2_connect_max = 0 
+
+stop_type as string
+stop_type = ""
+stop_options = 0
+best_stop = 0
+
+go_type as string
+go_type = "" 
+
+decision = ""
+direction as string
+direction2 as string
+direction = ""
+direction2 = ""
+
+type checks
+ x as integer
+ y as integer
+ occupied as boolean
+endtype 
+
+dim my_stop(2) as checks
+my_stop(stop_options).x = 0
+my_stop(stop_options).y = 0
+my_stop(stop_options).occupied = 0
+
+dim my_go(1) as checks
+my_go(0).x = 0
+my_go(0).y = 0
+my_go(0).occupied = 0
+my_go(1).x = 0
+my_go(1).y = 0
+my_go(1).occupied = 0
+
+
+return
+
+load_game:
+
+load sound "media/game/drop.wav",1
+set sound volume 1,90
+
+color backdrop rgb(50,100,100)
+
+load object "media/game/board.dbo",1
+position object 1,-175,-50,0 
+load object "media/game/player1_disk.dbo",2
+load object "media/game/player2_disk.dbo",3
+position object 2,0,5000,-10
+position object 3,0,5000,-10
+
+load object "media/game/arrow.dbo",4
+scale object 4,12,20,5
+xrotate object 4,90
+position object 4,-583,1300,-25 
+
+rem clone player 1 disks
+for i = 20 to 41
+  
+  clone object i,2 
+    
+next i
+
+rem clone player 2 disks
+for i = 42 to 63
+  
+  clone object i,3  
+    
+next i
+
+rem clone drop arrows
+x = -583
+for i = 5 to 10
+  inc x,192
+  clone object i,4
+  position object i,x,object position y(4),object position z(4) 
+    
+next i
+
+
+
+
+position camera 0,1100,-1500
+point camera 0,450,0
+
+return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+delete_game:
+
+for i = 1 to 100
+
+if object exist(i) = 1 then delete object i
+
+next i
+delete sound 1
+return

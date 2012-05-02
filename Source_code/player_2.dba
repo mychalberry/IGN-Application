@@ -1,0 +1,73 @@
+
+player2_turn:
+
+  gosub check_grid
+  gosub drop_disk_player2
+  gosub check_grid
+  gosub check_diag_left_max
+  gosub check_diag_right_max
+     
+  rem check to make sure max connection ok
+  if my_grid(my_stop(0).y+1,my_stop(0).x) = 0 or my_stop(0).occupied = 1
+       if  my_grid(my_stop(1).y+1,my_stop(1).x) = 0 or my_stop(1).occupied = 1 then best_stop = 0
+  endif
+   
+return
+
+
+
+check_grid:
+
+
+gosub check_horizontal_2
+gosub check_vertical_2
+ 
+gosub check_horizontal
+gosub check_vertical
+
+gosub do_diag_right
+gosub do_diag_right_2
+ 
+gosub do_diag_left
+gosub do_diag_left_2 
+return
+
+
+
+
+drop_disk_player2:
+
+    gosub check_player2_horizontal_max
+    gosub check_player2_vertical_max
+    gosub check_horizontal_max
+    gosub check_vertical_max
+    gosub check_diag_left_max
+    gosub check_diag_right_max
+
+    gosub check_horiz_2_trap
+    gosub check_horiz_2_trap_2
+    gosub check_diag_right_2_trap
+    gosub check_diag_left_2_trap
+    
+    gosub player2_build_row
+    gosub move_disk  
+
+return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
